@@ -1,0 +1,78 @@
+<div class="report">
+    <h2>SEO Alert for {{ now }}</h2>
+    <p>===============================</p>
+    {% for client in report.clients -%}
+    <h2>{{ client.client_name|capitalize }}</h2>
+    <ul>
+        <!-- Improved -->
+        {% if client['improved']|length > 0 -%}
+        <li>
+            <p>Improved Keywords</p>
+            <ul>
+                {% for kw in client['improved'] -%}
+                <li>
+                    <b>{{ kw['kw'] }}</b> has improved from <b>{{ kw['d1_rank'] }}</b>, now in <b>{{ kw['d0_rank'] }}</b>
+                </li>
+                {%- endfor %}
+            </ul>
+        </li>
+        {%- endif %}
+        <!-- Dropped -->
+        {% if client['dropped']|length > 0 -%}
+        <li>
+            <p>Dropped Keywords</p>
+            <ul>
+                {% for kw in client['dropped'] -%}
+                <li>
+                    <b>{{ kw['kw'] }}</b> has dropped from <b>{{ kw['d1_rank'] }}</b>, now in <b>{{ kw['d0_rank'] }}</b>
+                </li>
+                {%- endfor %}
+            </ul>
+
+        </li>
+        {%- endif %}
+        <!-- Entered -->
+        {% if client['entered']|length > 0 -%}
+        <li>
+            <p>Entered Top 10 Keywords</p>
+            <ul>
+                {% for kw in client['entered'] -%}
+                <li>
+                    <b>{{ kw['kw'] }}</b> has entered into Top 10 from <b>{{ kw['d1_rank'] }}</b>, now in <b>{{ kw['d0_rank'] }}</b>
+                </li>
+                {%- endfor %}
+            </ul>
+
+        </li>
+        {%- endif %}
+        <!-- Fallen -->
+        {% if client['fallen']|length > 0 -%}
+        <li>
+            <p>Fallen off Top 10 Keywords</p>
+            <ul>
+
+                {% for kw in client['fallen'] -%}
+                <li>
+                    <b>{{ kw['kw'] }}</b> has fallen off Top 10 from <b>{{ kw['d1_rank'] }}</b>, now in <b>{{ kw['d0_rank'] }}</b>
+                </li>
+                {%- endfor %}
+            </ul>
+
+        </li>
+        {%- endif %}
+        <!-- Reached -->
+        {% if client['reached']|length > 0 -%}
+            <li>     
+                <p>Reached Top 10 Keywords</p>
+                <ul>
+                    {% for kw in client['reached'] -%}
+                    <li>
+                        <b>{{ kw['kw'] }}</b> has reached Top 1 from <b>{{ kw['d1_rank'] }}</b>, now in <b>{{ kw['d0_rank'] }}</b>
+                    </li>
+                    {%- endfor %}
+                </ul>
+            </li>
+        {%- endif %}
+    </ul>
+    {%- endfor %}
+</div>

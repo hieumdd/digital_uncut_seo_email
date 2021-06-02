@@ -1,0 +1,61 @@
+WITH _window AS (
+    SELECT
+        DATE AS DATE,
+        kw AS kw,
+        grank AS d0_rank,
+        LAG(grank) over (
+            PARTITION BY kw
+            ORDER BY
+                DATE
+        ) AS d1_rank
+    FROM
+        `{{ client_name }}_serpbook.kwds_Prep`
+),
+_condition AS (
+    SELECT
+        DATE,
+        kw,
+        d0_rank,
+        d1_rank,
+        IF (
+            d0_rank - d1_rank <= -10,
+            TRUE,
+            FALSE
+        ) AS improved,
+        IF (
+            d0_rank - d1_rank >= 10,
+            TRUE,
+            FALSE
+        ) AS dropped,
+        IF (
+            d1_rank > 10
+            AND d0_rank <= 10,
+            TRUE,
+            FALSE
+        ) AS entered,
+        IF (
+            d1_rank <= 10
+            AND d0_rank > 10,
+            TRUE,
+            FALSE
+        ) AS fallen,
+        IF (
+            d1_rank <> 1
+            AND d0_rank = 1,
+            TRUE,
+            FALSE
+        ) AS reached,
+    FROM
+        _window
+    WHERE
+        DATE = date_add(CURRENT_DATE(), INTERVAL -2 DAY))
+    SELECT
+        *
+    FROM
+        _condition
+    WHERE
+        improved IS TRUE
+        OR dropped IS TRUE
+        OR entered IS TRUE
+        OR fallen IS TRUE
+        OR reached IS TRUE
