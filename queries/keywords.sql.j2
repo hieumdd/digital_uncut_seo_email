@@ -1,6 +1,8 @@
 WITH _window AS (
     SELECT
         DATE AS DATE,
+        language,
+        region,
         kw AS kw,
         grank AS d0_rank,
         LAG(grank) over (
@@ -14,6 +16,8 @@ WITH _window AS (
 _condition AS (
     SELECT
         DATE,
+        language,
+        region,
         kw,
         d0_rank,
         d1_rank,
@@ -48,14 +52,22 @@ _condition AS (
     FROM
         _window
     WHERE
-        DATE = date_add(CURRENT_DATE(), INTERVAL -2 DAY))
+        DATE = DATE_ADD(CURRENT_DATE(), INTERVAL 10 DAY))
     SELECT
         *
     FROM
         _condition
     WHERE
-        improved IS TRUE
-        OR dropped IS TRUE
-        OR entered IS TRUE
-        OR fallen IS TRUE
-        OR reached IS TRUE
+        (
+            improved IS TRUE
+            OR dropped IS TRUE
+            OR entered IS TRUE
+            OR fallen IS TRUE
+            OR reached IS TRUE
+        )
+        AND (
+            language = '{{ client_language }}'
+            AND region = '{{ client_region }}'
+        )
+    ORDER BY
+        kw

@@ -66,8 +66,11 @@ class EmailNotifications:
 
     def run(self):
         report = self.get_data()
-        self.send_email(report)
-        return "sent"
+        if len(report.clients_alert) > 0:
+            self.send_email(report)
+            return "sent"
+        else:
+            return 'no alert'
 
 def main(request):
     job = EmailNotifications()
