@@ -52,7 +52,7 @@ _condition AS (
     FROM
         _window
     WHERE
-        DATE = DATE_ADD(CURRENT_DATE(), INTERVAL 10 DAY))
+        DATE = DATE_ADD(CURRENT_DATE(), INTERVAL -1 DAY))
     SELECT
         *
     FROM
