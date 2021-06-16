@@ -6,7 +6,7 @@ WITH _window AS (
         kw AS kw,
         grank AS d0_rank,
         LAG(grank) over (
-            PARTITION BY kw
+            PARTITION BY kw, language, region
             ORDER BY
                 DATE
         ) AS d1_rank
